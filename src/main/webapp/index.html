@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Messages Restful CRUD service</title>
+
+</head>
+<body>
+	<H1>Messages Restful CRUD service</H1>
+
+	<p>
+		<a href="restful-ws-source.zip">Source code</a>
+	</p>
+	<p>
+	API URL: <a href="/messages/api/4">/messages/api/{message_id}</a>
+	<br/>
+		Application uses embedded H2 database (with 10 predefined test entries: IDs from 1
+		to 10).</p>
+
+	<p>
+		For test can be used for example this 
+		<a href="https://rest-client.googlecode.com/">REST client</a> 
+		(<a	href="https://rest-client.googlecode.com/files/restclient-ui-3.2.1-jar-with-dependencies.jar">download</a>). <br/>
+		Next types of HTTP requests can be used:
+	</p>
+	<ul>
+		<li>HTTP <b>POST</b> to <b>create</b> new entry</li>
+		<li>HTTP <b>GET</b> to <b>read</b> existent entry</li>
+		<li>HTTP <b>PUT</b> to <b>update</b> existent entry</li>
+		<li>HTTP <b>DELETE</b> to <b>delete</b> entry</li>
+	</ul>
+<p>Web service supports JSON and XML format for in/out messages.<br/>
+Format of request message should be defined in the HTTP header <b>Content-Type</b>. Valid content types are:
+<ul>
+ <li><b>Content-Type:</b> application/json</li>
+ <li><b>Content-Type:</b> application/xml</li>
+</ul>
+Desired format of response message should be defined in the HTTP header <b>Accept</b>. Valid "Accept" headers are:
+<ul>
+ <li><b>Accept:</b> application/json</li>
+ <li><b>Accept:</b> application/xml</li>
+</ul>
+
+</p>
+	
+<h3> Format of JSON message for POST and PUT operations: </h3>
+<div>
+	<pre>
+	{"title":"test title","body":"test	body","timestamp":1384449994000}
+	</pre>
+</div>
+<h3> Format of XML message for POST and PUT operations: </h3>
+
+<div>
+	<pre>
+	&lt;message&gt;
+	   &lt;title&gt;test title&lt;/title&gt; 
+	   &lt;body&gt;test body&lt;/body&gt;
+	   &lt;timestamp&gt;1384449994000&lt;/timestamp&gt;
+	&lt;/message&gt;
+	</pre>
+</div>	
+<h2>Examples of response messages: </h2>
+<h3>JSON response message: </h32>
+<div>
+	<pre>
+	{
+	   "records":1,
+	   "operation":"GET",
+	   "error":"",
+	   "message":{
+	      "body":"test body",
+	      "title":"test title",
+	      "id":12,
+	      "timestamp":1384449994000
+	   },
+	   "id":12
+	}
+	</pre>
+</div>
+</div>	
+<h3>XML response message: </h3>
+<div>
+	<pre>
+	&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+	&lt;status&gt;
+	   &lt;error /&gt;
+	   &lt;id&gt;10&lt;/id&gt;
+	   &lt;message&gt;
+	     &lt;body&gt;test body #10&lt;/body&gt;
+	      &lt;id&gt;10&lt;/id&gt;
+	     &lt;timestamp&gt;1384449990000&lt;/timestamp&gt;
+	      &lt;title&gt;test title #10&lt;/title&gt;
+	   &lt;/message&gt;
+	   &lt;operation&gt;GET&lt;/operation&gt;
+	   &lt;records&gt;1&lt;/records&gt;
+	&lt;/status&gt;
+	</pre>
+</div>
+<h3>Where:</h3>
+<ul>
+	<li><b>"records"</b> - is amount of affected entries in the DB.</li>
+	<li><b>"operation"</b> - is request's HTTP method.</li>
+	<li><b>"error"</b> - is error message if any. 
+	For example: org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0</li>
+	<li><b>"message"</b> - is related message (the same domain object as was used for request). 
+	For GET operation the "message" field contains result.
+	For POST and PUT operations the "message" field will be filled by the input message object
+	only if an error occurred. Input data will be saved in the response for troubleshooting goals.</li>
+	<li><b>"id"</b> - is the message ID in the DB. For POST operation "id" contains ID of new record (or -1 if error occurred), 
+	for rest of operations "id" is the same as in the input data (/messages/api/{message_id}).</li>
+
+</ul>
+</body>
+</html>
